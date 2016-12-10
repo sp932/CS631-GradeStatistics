@@ -34,7 +34,7 @@
 <body>
 
   <div class="wrapper">
-    <form class="form-signin" action="statistics.php" method="POST">
+    <form class="form-signin" action="student-roster.php" method="POST">
     <!-- <form class="form-signin"> -->
       <h2 class="form-signin-heading">Please login</h2>
       <input type="text" class="form-control" name="username" placeholder="Username" required="" autofocus="" />

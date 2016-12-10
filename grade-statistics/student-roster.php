@@ -63,6 +63,30 @@
     </div><!-- /.container-fluid -->
   </nav>
 
+  <script>
+  function showUser(str) {
+      if (str == "") {
+          document.getElementById("txtHint").innerHTML = "";
+          return;
+      } else {
+          if (window.XMLHttpRequest) {
+              // code for IE7+, Firefox, Chrome, Opera, Safari
+              xmlhttp = new XMLHttpRequest();
+          } else {
+              // code for IE6, IE5
+              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+          }
+          xmlhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                  document.getElementById("txtHint").innerHTML = this.responseText;
+              }
+          };
+          xmlhttp.open("GET","getstudent.php?q="+str,true);
+          xmlhttp.send();
+      }
+  }
+  </script>
+
       <?php
 	include 'login.php';
 	// connect to server and test if successful
@@ -78,13 +102,32 @@ if(mysqli_connect_error()){
 $username = $_POST['username'];
 $password = $_POST['password'];
 
+$query = "SELECT DISTINCT courseID from mjb34.COURSESECTION where facultyID = '$username'";
+
+
+
+while ($row = mysqli_fetch_array($result)) {
+  // Print out the contents of the entry
+  $rowIDString = (string)$rowIDNumber;
+  echo '<tr id="' . $rowIDString . '">';
+  echo '<td>' . $row['Course'] . '</td>';
+  echo '<td>' . $row['Section'] . '</td>';
+  echo '<td>' . $row['Instructor'] . '</td>';
+  echo '<td>' . $row['Seats Left'] . '</td>';
 ?>
 
+
+<form>
+<select name="users" onchange="showUser(this.value)">
+  <option value=""><?php echo ['Course']?></option>
+  <option value="1">Peter Griffin</option>
+  <option value="2">Lois Griffin</option>
+  <option value="3">Joseph Swanson</option>
+  <option value="4">Glenn Quagmire</option>
+  </select>
+</form>
               <br/>
 
-    </tbody>
-
-    </table>
 
 
   </div><!-- /container -->
