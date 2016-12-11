@@ -115,25 +115,25 @@
                         document.getElementById("semesterYear").innerHTML = this.responseText;
                     }
                 };
-                xmlhttp.open("GET","getSemesterYear.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username,true);
+                xmlhttp.open("GET","getSemesterYear_forExams.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username,true);
                 xmlhttp.send();
             }
         }
+         
         
-        
-        function showRoster(semesterYear) {
-            if (roster == "") {
-                document.getElementById("roster").style.display = "hidden";
-                document.getElementById("roster").innerHTML = "";
+        function showExams(semesterYear) {
+            if (semesterYear == "") {
+                document.getElementById("exams").style.display = "hidden";
+                document.getElementById("exams").innerHTML = "";
                 return;
             } 
             
             else { 
                 sessionStorage.semesterYear = semesterYear;
-                document.getElementById("roster").style.display = "visible";
+                document.getElementById("exams").style.display = "visible";
                 if (window.XMLHttpRequest) {
             
-                    // code for IE7+, Firefox, Chrome, Opera, Safari
+                     // code for IE7+, Firefox, Chrome, Opera, Safari
     
                     xmlhttp = new XMLHttpRequest();
         
@@ -144,19 +144,83 @@
                 }
                 xmlhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById("roster").innerHTML = this.responseText;
+                        document.getElementById("exams").innerHTML = this.responseText;
                     }
                 };
-                xmlhttp.open("GET","getRoster.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&semYear="+sessionStorage.semesterYear,true);
-                xmlhttp.send();
-            }
-        }
+                xmlhttp.open("GET","getExams.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&semYear="+sessionStorage.semesterYear,true);
+                xmlhttp.send(); 
+            } 
+        } 
+        
+        
+        function showQuestions(examID) {
+            if (examID == "") {
+                document.getElementById("questions").style.display = "hidden";
+                document.getElementById("questions").innerHTML = "";
+                return;
+            } 
+            
+            else { 
+                sessionStorage.examID = examID;
+                document.getElementById("questions").style.display = "visible";
+                if (window.XMLHttpRequest) {
+            
+                     // code for IE7+, Firefox, Chrome, Opera, Safari
+    
+                    xmlhttp = new XMLHttpRequest();
+        
+                } 
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("questions").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET","getExamQuestions.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&semYear="+sessionStorage.semesterYear+"&examID="+examID,true);
+                xmlhttp.send(); 
+            } 
+        } 
+        
+        
+        function showAverage(questionPlusValue) {
+            if (questionPlusValue == "") {
+                document.getElementById("average").style.display = "hidden";
+                document.getElementById("average").innerHTML = "";
+                return;
+            } 
+            
+            else { 
+                sessionStorage.questionPlusValue = questionPlusValue;
+                document.getElementById("average").style.display = "visible";
+                if (window.XMLHttpRequest) {
+            
+                     // code for IE7+, Firefox, Chrome, Opera, Safari
+    
+                    xmlhttp = new XMLHttpRequest();
+        
+                } 
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("average").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET","getQuestionAverage.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&semYear="+sessionStorage.semesterYear+"&examID="+sessionStorage.examID+"&questionPlusValue="+questionPlusValue,true);
+                xmlhttp.send(); 
+            } 
+        } 
         
         
     </script>
+     
     
-    
-    
+     
 
     <?php
     include 'login.php';
@@ -200,7 +264,9 @@
     
     <form id = "section"></form>
     <form id = "semesterYear"></form>
-    <table id="roster" class="table filterable order-table table-hover table-bordered table-striped"></table>
+    <form id = "exams"></form>
+    <form id = "questions"></form>
+    <div id = "average"></div>
 
 
               <br/>
