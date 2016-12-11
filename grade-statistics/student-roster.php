@@ -115,6 +115,38 @@
         }
         
         
+        function showRoster(semesterYear) {
+            if (roster == "") {
+                document.getElementById("roster").style.display = "hidden";
+                document.getElementById("roster").innerHTML = "";
+                return;
+            } 
+            
+            else { 
+                sessionStorage.semesterYear = semesterYear;
+                document.getElementById("roster").style.display = "visible";
+                if (window.XMLHttpRequest) {
+            
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+    
+                    xmlhttp = new XMLHttpRequest();
+        
+                } 
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("roster").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET","getRoster.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&semYear="+sessionStorage.semesterYear,true);
+                xmlhttp.send();
+            }
+        }
+        
+        
     </script>
 
     <?php   
@@ -158,21 +190,7 @@
     
     <form id = "section"></form>
     <form id = "semesterYear"></form>
-    <table id="myTable" class="table filterable order-table table-hover table-bordered table-striped">
-      <thead>
-        <tr>
-          <th align="center">SSN</th>
-          <th align="center">Student ID</th>
-          <th align="center">Name</th>
-          <th align="center">Email</th>
-          <th align="center">DOB</th>
-          <th align="center">City</th>
-          <th align="center">State</th>
-          <th align="center">Zip</th>
-          <th align="center">Street</th>
-        </tr>
-      </thead>
-    </table>
+    <table id="roster" class="table filterable order-table table-hover table-bordered table-striped"></table>
 
     
     
