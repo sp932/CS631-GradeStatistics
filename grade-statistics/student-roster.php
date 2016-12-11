@@ -42,9 +42,9 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
           <li class="active"><a href="student-roster.php">Student Roster<span class="sr-only">(current)</span></a></li>
-          <li><a href="student-grade.php">Student Grade</a></li>
-          <li><a href="exam-question-average.php">Exam Question Average</a></li>
-          <li><a href="student-exam-history.php">Student Exam History</a></li>
+            <?php echo '<li><a href="student-grade.php?username=' . $_POST[username] . '">Student Grade</a></li>' ?>
+            <?php echo '<li><a href="exam-question-average.php?username=' . $_POST[username] . '">Exam Question Average</a></li>' ?>
+            <?php echo '<li><a href="student-exam-history.php?username=' . $_POST[username] . '">Student Exam History</a></li>' ?>
           <li><a href="logout.php">Logout</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->

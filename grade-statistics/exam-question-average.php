@@ -25,13 +25,7 @@
 	<script src="js/bootstrap-datepicker.js"></script>
 
 <script>
- $(document).ready( function () {
-    $("#myTable").dataTable( {
-        "dom": '<"clear">f',
-        "paging": false,
-        "searching": true,
-    } );
-} );
+
  </script>
 
 
@@ -62,23 +56,152 @@
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
+    
+    <script>
+        function showSections(course) {
+            if (course == "") {
+                document.getElementById("section").style.display = "hidden";
+                document.getElementById("section").innerHTML = "";
+                return;
+            } 
+            
+            else { 
+                sessionStorage.course = course;
+                document.getElementById("section").style.display = "visible";
+                if (window.XMLHttpRequest) {
+            
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+    
+                    xmlhttp = new XMLHttpRequest();
+        
+                } 
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("section").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET","getSection.php?c="+course+"&fid="+sessionStorage.username,true);
+                xmlhttp.send();
+            }
+        }
+        
+        function showSemesterYear(section) {
+            if (section == "") {
+                document.getElementById("semesterYear").style.display = "hidden";
+                document.getElementById("semesterYear").innerHTML = "";
+                return;
+            } 
+            
+            else { 
+                sessionStorage.section = section;
+                document.getElementById("semesterYear").style.display = "visible";
+                if (window.XMLHttpRequest) {
+            
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+    
+                    xmlhttp = new XMLHttpRequest();
+        
+                } 
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("semesterYear").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET","getSemesterYear.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username,true);
+                xmlhttp.send();
+            }
+        }
+        
+        
+        function showRoster(semesterYear) {
+            if (roster == "") {
+                document.getElementById("roster").style.display = "hidden";
+                document.getElementById("roster").innerHTML = "";
+                return;
+            } 
+            
+            else { 
+                sessionStorage.semesterYear = semesterYear;
+                document.getElementById("roster").style.display = "visible";
+                if (window.XMLHttpRequest) {
+            
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+    
+                    xmlhttp = new XMLHttpRequest();
+        
+                } 
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("roster").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET","getRoster.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&semYear="+sessionStorage.semesterYear,true);
+                xmlhttp.send();
+            }
+        }
+        
+        
+    </script>
+    
+    
+    
 
-      <?php
-	include 'login.php';
-	// connect to server and test if successful
-	$connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
+    <?php
+    include 'login.php';
 
-if(mysqli_connect_error()){
+    // connect to server and test if successful	
+    $connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
+    if(mysqli_connect_error()){
         die("Database Connection Failed: " .
                 mysqli_connect_error() .
                 " (" . mysqli_connect_errno() . ")"
-);
-}
+           );
+    }
 
-$username = $_POST['username'];
-$password = $_POST['password'];
 
-?>
+    $username = $_GET['username'];
+    
+         if(isset($username)){
+              echo '<script type="text/javascript">'.
+                  'sessionStorage.username = "'. $username .'";'.         
+                  '</script>';
+          }   
+    $query = "SELECT DISTINCT courseID FROM COURSESECTION WHERE facultyID = '". $username ."'";
+    //Beginning of the dropdown menu
+
+
+    ?>
+    
+       <form>
+<!--        <select name="users">-->
+        <select name="users" onchange="showSections(this.value)">
+            <option value="">Select a Course:</option>
+            <?php
+            echo $query;
+            $result = mysqli_query($connection, $query);
+            while($row = mysqli_fetch_array($result)){
+                echo "<option value = '" . $row['courseID'] . "'> ". $row['courseID'] . "</option>";
+            }
+            ?>
+        </select>
+    </form>
+    
+    <form id = "section"></form>
+    <form id = "semesterYear"></form>
+    <table id="roster" class="table filterable order-table table-hover table-bordered table-striped"></table>
+
 
               <br/>
 
@@ -88,7 +211,6 @@ $password = $_POST['password'];
 
 
   </div><!-- /container -->
-
 
 
 </body>
