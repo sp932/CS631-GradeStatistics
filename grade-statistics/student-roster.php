@@ -23,18 +23,6 @@
     <script src="js/dataTables.bootstrap.js"></script>
     <script src="js/dataTables.tableTools.js"></script>
 	<script src="js/bootstrap-datepicker.js"></script>
-
-<script>
- $(document).ready( function () {
-    $("#myTable").dataTable( {
-        "dom": '<"clear">f',
-        "paging": false,
-        "searching": true,
-    } );
-} );
- </script>
-
-
 </head>
 
 <body>
@@ -62,71 +50,134 @@
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
+    
+    <script>
+        function showSections(course) {
+            if (course == "") {
+                document.getElementById("section").style.display = "hidden";
+                document.getElementById("section").innerHTML = "";
+                return;
+            } 
+            
+            else { 
+                sessionStorage.course = course;
+                document.getElementById("section").style.display = "visible";
+                if (window.XMLHttpRequest) {
+            
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+    
+                    xmlhttp = new XMLHttpRequest();
+        
+                } 
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("section").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET","getSection.php?c="+course+"&fid="+sessionStorage.username,true);
+                xmlhttp.send();
+            }
+        }
+        
+        function showSemesterYear(section) {
+            if (section == "") {
+                document.getElementById("semesterYear").style.display = "hidden";
+                document.getElementById("semesterYear").innerHTML = "";
+                return;
+            } 
+            
+            else { 
+                sessionStorage.section = section;
+                document.getElementById("semesterYear").style.display = "visible";
+                if (window.XMLHttpRequest) {
+            
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+    
+                    xmlhttp = new XMLHttpRequest();
+        
+                } 
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("semesterYear").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET","getSemesterYear.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username,true);
+                xmlhttp.send();
+            }
+        }
+        
+        
+    </script>
 
-  <script>
-  function showUser(str) {
-      if (str == "") {
-          document.getElementById("txtHint").innerHTML = "";
-          return;
-      } else {
-          if (window.XMLHttpRequest) {
-              // code for IE7+, Firefox, Chrome, Opera, Safari
-              xmlhttp = new XMLHttpRequest();
-          } else {
-              // code for IE6, IE5
-              xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-          }
-          xmlhttp.onreadystatechange = function() {
-              if (this.readyState == 4 && this.status == 200) {
-                  document.getElementById("txtHint").innerHTML = this.responseText;
-              }
-          };
-          xmlhttp.open("GET","getstudent.php?q="+str,true);
-          xmlhttp.send();
-      }
-  }
-  </script>
+    <?php   
+    include 'login.php';
 
-      <?php
-	include 'login.php';
-	// connect to server and test if successful
-	$connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
-
-if(mysqli_connect_error()){
+    // connect to server and test if successful	
+    $connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
+    if(mysqli_connect_error()){
         die("Database Connection Failed: " .
                 mysqli_connect_error() .
                 " (" . mysqli_connect_errno() . ")"
-);
-}
-
-$username = $_POST['username'];
-$password = $_POST['password'];
-
-$query = "SELECT DISTINCT courseID from mjb34.COURSESECTION where facultyID = '$username'";
+           );
+    }
 
 
-
-while ($row = mysqli_fetch_array($result)) {
-  // Print out the contents of the entry
-  $rowIDString = (string)$rowIDNumber;
-  echo '<tr id="' . $rowIDString . '">';
-  echo '<td>' . $row['Course'] . '</td>';
-  echo '<td>' . $row['Section'] . '</td>';
-  echo '<td>' . $row['Instructor'] . '</td>';
-  echo '<td>' . $row['Seats Left'] . '</td>';
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    
+         if(isset($username)){
+              echo '<script type="text/javascript">'.
+                  'sessionStorage.username = "'. $username .'";'.         
+                  '</script>';
+          }   
+    $query = "SELECT DISTINCT courseID FROM COURSESECTION WHERE facultyID = '". $username ."'";
+    //Beginning of the dropdown menu
 ?>
 
+    <form>
+<!--        <select name="users">-->
+        <select name="users" onchange="showSections(this.value)">
+            <option value="">Select a Course:</option>
+            <?php
+            echo $query;
+            $result = mysqli_query($connection, $query);
+            while($row = mysqli_fetch_array($result)){
+                echo "<option value = '" . $row['courseID'] . "'> ". $row['courseID'] . "</option>";
+            }
+            ?>
+        </select>
+    </form>
+    
+    <form id = "section"></form>
+    <form id = "semesterYear"></form>
+    <table id="myTable" class="table filterable order-table table-hover table-bordered table-striped">
+      <thead>
+        <tr>
+          <th align="center">SSN</th>
+          <th align="center">Student ID</th>
+          <th align="center">Name</th>
+          <th align="center">Email</th>
+          <th align="center">DOB</th>
+          <th align="center">City</th>
+          <th align="center">State</th>
+          <th align="center">Zip</th>
+          <th align="center">Street</th>
+        </tr>
+      </thead>
+    </table>
 
-<form>
-<select name="users" onchange="showUser(this.value)">
-  <option value=""><?php echo ['Course']?></option>
-  <option value="1">Peter Griffin</option>
-  <option value="2">Lois Griffin</option>
-  <option value="3">Joseph Swanson</option>
-  <option value="4">Glenn Quagmire</option>
-  </select>
-</form>
-              <br/>
+    
+    
+
+<br/>
 
 
 
