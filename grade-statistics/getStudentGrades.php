@@ -17,11 +17,10 @@ $query = "SELECT s.studentID, SUM(s.grade) as grade_sum, SUM(eq.value) as value_
 
 $result = mysqli_query($connection, $query);
 
+
+
 while ($row = mysqli_fetch_array($result)){
-    echo $row['grade_sum'];
-    // echo $row['SUM(s.grade)'];
-    // echo $row['value_sum'];
-    // echo $row['student_grade'];
+    echo "Student " . $studentID . " recieved a " . $row['student_grade'];
 }
 
 

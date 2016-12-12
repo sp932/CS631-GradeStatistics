@@ -47,34 +47,36 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li><a href="student-roster.php">Student Roster</a></li>
-          <li><a href="student-grade.php">Student Grade</a></li>
-          <li class="active"><a href="exam-question-average.php">Exam Question Average<span class="sr-only">(current)</span></a></li>
-          <li><a href="student-exam-history.php">Student Exam History</a></li>
+          <?php echo '<li><a href="student-roster.php?username=' . $_GET[username] . '">Student Roster</a></li>' ?>
+            <?php echo '<li><a href="student-grade.php?username=' . $_GET[username] . '">Student Grade</a></li>' ?>
+            <li class="active"><a href="student-roster.php">Exam Question Average<span class="sr-only">(current)</span></a></li>
+            <?php echo '<li><a href="student-exam-history.php?username=' . $_GET[username] . '">Student Exam History</a></li>' ?>
           <li><a href="logout.php">Logout</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
-    
+  <h3><center><strong>Exam Question Average</strong></center></h3>
+  <h5><center><strong>Use the dropdown below to calculate exam question average.</strong></center></h5>
+
     <script>
         function showSections(course) {
             if (course == "") {
                 document.getElementById("section").style.display = "hidden";
                 document.getElementById("section").innerHTML = "";
                 return;
-            } 
-            
-            else { 
+            }
+
+            else {
                 sessionStorage.course = course;
                 document.getElementById("section").style.display = "visible";
                 if (window.XMLHttpRequest) {
-            
+
                     // code for IE7+, Firefox, Chrome, Opera, Safari
-    
+
                     xmlhttp = new XMLHttpRequest();
-        
-                } 
+
+                }
                 else {
                     // code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -88,24 +90,24 @@
                 xmlhttp.send();
             }
         }
-        
+
         function showSemesterYear(section) {
             if (section == "") {
                 document.getElementById("semesterYear").style.display = "hidden";
                 document.getElementById("semesterYear").innerHTML = "";
                 return;
-            } 
-            
-            else { 
+            }
+
+            else {
                 sessionStorage.section = section;
                 document.getElementById("semesterYear").style.display = "visible";
                 if (window.XMLHttpRequest) {
-            
+
                     // code for IE7+, Firefox, Chrome, Opera, Safari
-    
+
                     xmlhttp = new XMLHttpRequest();
-        
-                } 
+
+                }
                 else {
                     // code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -119,25 +121,25 @@
                 xmlhttp.send();
             }
         }
-         
-        
+
+
         function showExams(semesterYear) {
             if (semesterYear == "") {
                 document.getElementById("exams").style.display = "hidden";
                 document.getElementById("exams").innerHTML = "";
                 return;
-            } 
-            
-            else { 
+            }
+
+            else {
                 sessionStorage.semesterYear = semesterYear;
                 document.getElementById("exams").style.display = "visible";
                 if (window.XMLHttpRequest) {
-            
+
                      // code for IE7+, Firefox, Chrome, Opera, Safari
-    
+
                     xmlhttp = new XMLHttpRequest();
-        
-                } 
+
+                }
                 else {
                     // code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -148,28 +150,28 @@
                     }
                 };
                 xmlhttp.open("GET","getExams.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&semYear="+sessionStorage.semesterYear,true);
-                xmlhttp.send(); 
-            } 
-        } 
-        
-        
+                xmlhttp.send();
+            }
+        }
+
+
         function showQuestions(examID) {
             if (examID == "") {
                 document.getElementById("questions").style.display = "hidden";
                 document.getElementById("questions").innerHTML = "";
                 return;
-            } 
-            
-            else { 
+            }
+
+            else {
                 sessionStorage.examID = examID;
                 document.getElementById("questions").style.display = "visible";
                 if (window.XMLHttpRequest) {
-            
+
                      // code for IE7+, Firefox, Chrome, Opera, Safari
-    
+
                     xmlhttp = new XMLHttpRequest();
-        
-                } 
+
+                }
                 else {
                     // code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -180,28 +182,28 @@
                     }
                 };
                 xmlhttp.open("GET","getExamQuestions.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&semYear="+sessionStorage.semesterYear+"&examID="+examID,true);
-                xmlhttp.send(); 
-            } 
-        } 
-        
-        
+                xmlhttp.send();
+            }
+        }
+
+
         function showAverage(questionPlusValue) {
             if (questionPlusValue == "") {
                 document.getElementById("average").style.display = "hidden";
                 document.getElementById("average").innerHTML = "";
                 return;
-            } 
-            
-            else { 
+            }
+
+            else {
                 sessionStorage.questionPlusValue = questionPlusValue;
                 document.getElementById("average").style.display = "visible";
                 if (window.XMLHttpRequest) {
-            
+
                      // code for IE7+, Firefox, Chrome, Opera, Safari
-    
+
                     xmlhttp = new XMLHttpRequest();
-        
-                } 
+
+                }
                 else {
                     // code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -212,20 +214,20 @@
                     }
                 };
                 xmlhttp.open("GET","getQuestionAverage.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&semYear="+sessionStorage.semesterYear+"&examID="+sessionStorage.examID+"&questionPlusValue="+questionPlusValue,true);
-                xmlhttp.send(); 
-            } 
-        } 
-        
-        
+                xmlhttp.send();
+            }
+        }
+
+
     </script>
-     
-    
-     
+
+
+
 
     <?php
     include 'login.php';
 
-    // connect to server and test if successful	
+    // connect to server and test if successful
     $connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
     if(mysqli_connect_error()){
         die("Database Connection Failed: " .
@@ -236,18 +238,18 @@
 
 
     $username = $_GET['username'];
-    
+
          if(isset($username)){
               echo '<script type="text/javascript">'.
-                  'sessionStorage.username = "'. $username .'";'.         
+                  'sessionStorage.username = "'. $username .'";'.
                   '</script>';
-          }   
+          }
     $query = "SELECT DISTINCT courseID FROM COURSESECTION WHERE facultyID = '". $username ."'";
     //Beginning of the dropdown menu
 
 
     ?>
-    
+<center>
        <form>
 <!--        <select name="users">-->
         <select name="users" onchange="showSections(this.value)">
@@ -261,13 +263,13 @@
             ?>
         </select>
     </form>
-    
+
     <form id = "section"></form>
     <form id = "semesterYear"></form>
     <form id = "exams"></form>
     <form id = "questions"></form>
     <div id = "average"></div>
-
+</center>
 
               <br/>
 

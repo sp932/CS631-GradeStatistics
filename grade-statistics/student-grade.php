@@ -41,15 +41,18 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li><a href="student-roster.php">Student Roster<span class="sr-only">(current)</span></a></li>
-          <?php echo '<li><a href="student-grade.php?username=' . $_POST[username] . '">Student Grade<span class="sr-only">(current)</span></a></li>' ?>
-          <li><a href="exam-question-average.php">Exam Question Average</a></li>
-          <li><a href="student-exam-history.php">Student Exam History</a></li>
+          <?php echo '<li><a href="student-roster.php?username=' . $_GET[username] . '">Student Roster</a></li>' ?>
+          <li class="active"><a href="student-grade.php">Student Grade<span class="sr-only">(current)</span></a></li>
+            <?php echo '<li><a href="exam-question-average.php?username=' . $_GET[username] . '">Exam Question Average</a></li>' ?>
+            <?php echo '<li><a href="student-exam-history.php?username=' . $_GET[username] . '">Student Exam History</a></li>' ?>
           <li><a href="logout.php">Logout</a></li>
         </ul>
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
+  <h3><center><strong>Student Grade</strong></center></h3>
+  <h5><center><strong>Use the dropdown below to calculate student grades.</strong></center></h5>
+
 
     <script>
         function showSections(course) {
@@ -204,7 +207,7 @@
     $query = "SELECT DISTINCT courseID FROM COURSESECTION WHERE facultyID = '". $username ."'";
     //Beginning of the dropdown menu
 ?>
-
+<center>
     <form>
 <!--        <select name="users">-->
         <select name="users" onchange="showSections(this.value)">
@@ -219,10 +222,12 @@
         </select>
     </form>
 
+
     <form id = "section"></form>
     <form id = "semesterYear"></form>
     <form id = "studentID"></form>
     <div id = "studentGrades"></div>
+  </center>
 
 
 

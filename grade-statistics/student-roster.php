@@ -37,7 +37,7 @@
           <span class="icon-bar"></span>
         </button>
       </div>
-
+      <?php if(isset($_GET['username'])){$_POST['username'] = $_GET['username'];} ?>
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
@@ -50,25 +50,27 @@
       </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
   </nav>
-    
+  <h3><center><strong>Student Roster</strong></center></h3>
+  <h5><center><strong>Use the dropdown below to view student roster.</strong></center></h5>
+
     <script>
         function showSections(course) {
             if (course == "") {
                 document.getElementById("section").style.display = "hidden";
                 document.getElementById("section").innerHTML = "";
                 return;
-            } 
-            
-            else { 
+            }
+
+            else {
                 sessionStorage.course = course;
                 document.getElementById("section").style.display = "visible";
                 if (window.XMLHttpRequest) {
-            
+
                     // code for IE7+, Firefox, Chrome, Opera, Safari
-    
+
                     xmlhttp = new XMLHttpRequest();
-        
-                } 
+
+                }
                 else {
                     // code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -82,24 +84,24 @@
                 xmlhttp.send();
             }
         }
-        
+
         function showSemesterYear(section) {
             if (section == "") {
                 document.getElementById("semesterYear").style.display = "hidden";
                 document.getElementById("semesterYear").innerHTML = "";
                 return;
-            } 
-            
-            else { 
+            }
+
+            else {
                 sessionStorage.section = section;
                 document.getElementById("semesterYear").style.display = "visible";
                 if (window.XMLHttpRequest) {
-            
+
                     // code for IE7+, Firefox, Chrome, Opera, Safari
-    
+
                     xmlhttp = new XMLHttpRequest();
-        
-                } 
+
+                }
                 else {
                     // code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -113,25 +115,25 @@
                 xmlhttp.send();
             }
         }
-        
-        
+
+
         function showRoster(semesterYear) {
             if (roster == "") {
                 document.getElementById("roster").style.display = "hidden";
                 document.getElementById("roster").innerHTML = "";
                 return;
-            } 
-            
-            else { 
+            }
+
+            else {
                 sessionStorage.semesterYear = semesterYear;
                 document.getElementById("roster").style.display = "visible";
                 if (window.XMLHttpRequest) {
-            
+
                     // code for IE7+, Firefox, Chrome, Opera, Safari
-    
+
                     xmlhttp = new XMLHttpRequest();
-        
-                } 
+
+                }
                 else {
                     // code for IE6, IE5
                     xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
@@ -145,14 +147,14 @@
                 xmlhttp.send();
             }
         }
-        
-        
+
+
     </script>
 
-    <?php   
+    <?php
     include 'login.php';
 
-    // connect to server and test if successful	
+    // connect to server and test if successful
     $connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
     if(mysqli_connect_error()){
         die("Database Connection Failed: " .
@@ -162,18 +164,26 @@
     }
 
 
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    
+    // $username = $_POST['username'];
+    // $password = $_POST['password'];
+
+
+    if(!isset($_GET['username'])){
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+      }else{
+        $username = $_GET['username'];
+    }
+
          if(isset($username)){
               echo '<script type="text/javascript">'.
-                  'sessionStorage.username = "'. $username .'";'.         
+                  'sessionStorage.username = "'. $username .'";'.
                   '</script>';
-          }   
+          }
     $query = "SELECT DISTINCT courseID FROM COURSESECTION WHERE facultyID = '". $username ."'";
     //Beginning of the dropdown menu
 ?>
-
+<center>
     <form>
 <!--        <select name="users">-->
         <select name="users" onchange="showSections(this.value)">
@@ -187,13 +197,13 @@
             ?>
         </select>
     </form>
-    
+
     <form id = "section"></form>
     <form id = "semesterYear"></form>
     <table id="roster" class="table filterable order-table table-hover table-bordered table-striped"></table>
+</center>
 
-    
-    
+
 
 <br/>
 
