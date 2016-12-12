@@ -22,19 +22,7 @@
     <script src="js/jquery.dataTables.min.js"></script>
     <script src="js/dataTables.bootstrap.js"></script>
     <script src="js/dataTables.tableTools.js"></script>
-	<script src="js/bootstrap-datepicker.js"></script>
-
-<script>
- $(document).ready( function () {
-    $("#myTable").dataTable( {
-        "dom": '<"clear">f',
-        "paging": false,
-        "searching": true,
-    } );
-} );
- </script>
-
-
+	  <script src="js/bootstrap-datepicker.js"></script>
 </head>
 
 <body>
@@ -53,8 +41,8 @@
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-          <li><a href="student-roster.php">Student Roster</a></li>
-          <li class="active"><a href="student-grade.php">Student Grade<span class="sr-only">(current)</span></a></li>
+          <li><a href="student-roster.php">Student Roster<span class="sr-only">(current)</span></a></li>
+          <?php echo '<li><a href="student-grade.php?username=' . $_POST[username] . '">Student Grade<span class="sr-only">(current)</span></a></li>' ?>
           <li><a href="exam-question-average.php">Exam Question Average</a></li>
           <li><a href="student-exam-history.php">Student Exam History</a></li>
           <li><a href="logout.php">Logout</a></li>
@@ -63,28 +51,184 @@
     </div><!-- /.container-fluid -->
   </nav>
 
-      <?php
-	include 'login.php';
-	// connect to server and test if successful
-	$connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
+    <script>
+        function showSections(course) {
+            if (course == "") {
+                document.getElementById("section").style.display = "hidden";
+                document.getElementById("section").innerHTML = "";
+                return;
+            }
 
-if(mysqli_connect_error()){
+            else {
+                sessionStorage.course = course;
+                document.getElementById("section").style.display = "visible";
+                if (window.XMLHttpRequest) {
+
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+
+                    xmlhttp = new XMLHttpRequest();
+
+                }
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("section").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET","getSection.php?c="+course+"&fid="+sessionStorage.username,true);
+                xmlhttp.send();
+            }
+        }
+
+        function showSemesterYear(section) {
+            if (section == "") {
+                document.getElementById("semesterYear").style.display = "hidden";
+                document.getElementById("semesterYear").innerHTML = "";
+                return;
+            }
+
+            else {
+                sessionStorage.section = section;
+                document.getElementById("semesterYear").style.display = "visible";
+                if (window.XMLHttpRequest) {
+
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+
+                    xmlhttp = new XMLHttpRequest();
+
+                }
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("semesterYear").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET","getSemesterYear_grade.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username,true);
+                xmlhttp.send();
+            }
+        }
+
+        function showStudentID(semesterYear) {
+            if (semesterYear == "") {
+                document.getElementById("studentID").style.display = "hidden";
+                document.getElementById("studentID").innerHTML = "";
+                return;
+            }
+
+            else {
+                sessionStorage.semesterYear = semesterYear;
+                document.getElementById("studentID").style.display = "visible";
+                if (window.XMLHttpRequest) {
+
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+
+                    xmlhttp = new XMLHttpRequest();
+
+                }
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("studentID").innerHTML = this.responseText;
+                    }
+                };
+                console.log(sessionStorage.semesterYear);
+                xmlhttp.open("GET","getStudentID.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&sid="+sessionStorage.studentID+"&semesterYear="+sessionStorage.semesterYear,true);
+                xmlhttp.send();
+            }
+        }
+
+
+        function showStudentGrades(studentID) {
+            if (studentID == "") {
+                document.getElementById("studentGrades").style.display = "hidden";
+                document.getElementById("studentGrades").innerHTML = "";
+                return;
+            }
+
+            else {
+                sessionStorage.studentID = studentID;
+                document.getElementById("studentGrades").style.display = "visible";
+                if (window.XMLHttpRequest) {
+
+                    // code for IE7+, Firefox, Chrome, Opera, Safari
+
+                    xmlhttp = new XMLHttpRequest();
+
+                }
+                else {
+                    // code for IE6, IE5
+                    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+                }
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("studentGrades").innerHTML = this.responseText;
+                    }
+                };
+                xmlhttp.open("GET","getStudentGrades.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&sid="+sessionStorage.studentID+"&semYear="+sessionStorage.semesterYear,true);
+                xmlhttp.send();
+            }
+        }
+
+
+    </script>
+
+    <?php
+    include 'login.php';
+
+    // connect to server and test if successful
+    $connection = mysqli_connect($db_hostname, $db_username, $db_password, $db_database);
+    if(mysqli_connect_error()){
         die("Database Connection Failed: " .
                 mysqli_connect_error() .
                 " (" . mysqli_connect_errno() . ")"
-);
-}
+           );
+    }
 
-$username = $_POST['username'];
-$password = $_POST['password'];
 
+    $username = $_GET['username'];
+
+         if(isset($username)){
+              echo '<script type="text/javascript">'.
+                  'sessionStorage.username = "'. $username .'";'.
+                  '</script>';
+          }
+    $query = "SELECT DISTINCT courseID FROM COURSESECTION WHERE facultyID = '". $username ."'";
+    //Beginning of the dropdown menu
 ?>
 
-              <br/>
+    <form>
+<!--        <select name="users">-->
+        <select name="users" onchange="showSections(this.value)">
+            <option value="">Select a Course:</option>
+            <?php
+            echo $query;
+            $result = mysqli_query($connection, $query);
+            while($row = mysqli_fetch_array($result)){
+                echo "<option value = '" . $row['courseID'] . "'> ". $row['courseID'] . "</option>";
+            }
+            ?>
+        </select>
+    </form>
 
-    </tbody>
+    <form id = "section"></form>
+    <form id = "semesterYear"></form>
+    <form id = "studentID"></form>
+    <div id = "studentGrades"></div>
 
-    </table>
+
+
+
+<br/>
+
 
 
   </div><!-- /container -->
