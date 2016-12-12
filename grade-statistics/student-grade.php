@@ -141,7 +141,7 @@
                     }
                 };
                 console.log(sessionStorage.semesterYear);
-                xmlhttp.open("GET","getStudentID.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&sid="+sessionStorage.studentID+"&semesterYear="+sessionStorage.semesterYear,true);
+                xmlhttp.open("GET","getStudentID.php?c="+sessionStorage.course+"&s="+ sessionStorage.section+"&fid="+sessionStorage.username+"&sid="+sessionStorage.studentID+"&semYear="+sessionStorage.semesterYear,true);
                 xmlhttp.send();
             }
         }
