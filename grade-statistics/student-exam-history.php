@@ -195,7 +195,7 @@ if(mysqli_connect_error()){
 }
 
 $username = $_GET['username'];
-$query = "SELECT studentID from STUDENTS";
+$query = "SELECT studentID from STUDENTS ORDER BY studentID";
 
 
 ?>
